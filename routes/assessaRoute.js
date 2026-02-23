@@ -15,7 +15,7 @@ const {
   FAQCard,
   Contact,
   Footer,
-} = require("../models/skillnaavModel");
+} = require("../models/assessaModel");
 
 const User = require("../models/userModel");
 
@@ -142,11 +142,11 @@ router.post(
   })
 );
 
-// Route to get all SkillNaav data with caching
+// Route to get all Assessa data with caching
 router.get(
-  "/get-skillnaav-data",
+  "/get-assessa-data",
   asyncHandler(async (req, res) => {
-    const cacheKey = "skillnaav-data";
+    const cacheKey = "assessa-data";
     const cachedData = cache.get(cacheKey);
 
     if (cachedData) {
