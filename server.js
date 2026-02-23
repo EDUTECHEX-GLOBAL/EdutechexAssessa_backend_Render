@@ -17,7 +17,8 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:5000",
   "https://www.edutechexassessa.com",
-  "https://edutechexassessa.com"
+  "https://edutechexassessa.com",
+  "https://edutechex-assessa-frontend-vercel.vercel.app"
 ];
 
 const corsOptions = {
