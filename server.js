@@ -5,14 +5,12 @@ const cors = require("cors");
 const connectDB = require("./config/dbConfig");
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
 
-dotenv.config(); // Load environment variables
+dotenv.config();
 
-const app = express(); // Initialize express app
+const app = express();
 
-// MongoDB Connection
-connectDB(); // Establish MongoDB connection
+connectDB();
 
-// Enable CORS for frontend-backend communication
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:5000",
@@ -23,7 +21,7 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: function (origin, callback) {
-    const cleanedOrigin = origin?.replace(/\/$/, ""); // Remove trailing slash
+    const cleanedOrigin = origin?.replace(/\/$/, "");
 
     if (!origin || allowedOrigins.includes(cleanedOrigin)) {
       callback(null, true);
@@ -39,15 +37,12 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// ✅ Debug middleware
 app.use((req, res, next) => {
   next();
 });
 
-// Middleware
 app.use(express.json());
 
-// Routes
 const userRoutes = require("./routes/webapp-routes/userRoutes");
 const teacherRoutes = require("./routes/teacherRoutes");
 const adminRoutes = require("./routes/adminRoutes");
@@ -69,7 +64,7 @@ const studentAttemptedAssessmentsRoutes = require("./routes/studentAttemptedAsse
 const proctoringRoutes = require("./routes/proctoringRoutes");
 const adminNotificationRoutes = require("./routes/adminNotificationRoutes");
 const subscriptionRoutes = require("./routes/subscriptionRoutes");
-const schoolAdminRoutes = require("./routes/schoolAdminRoutes"); // ✅ Unified routes
+const schoolAdminRoutes = require("./routes/schoolAdminRoutes");
 const schoolAdminForgotPasswordRoutes = require("./routes/schoolAdmin_forgotpassword_routes");
 
 app.use("/api/users", userRoutes);
@@ -94,10 +89,13 @@ app.use("/api/attempts", studentAttemptedAssessmentsRoutes);
 app.use("/api/proctoring", proctoringRoutes);
 app.use("/api/admin/notifications", adminNotificationRoutes);
 app.use("/api/subscription", subscriptionRoutes);
-
-// ✅ ONLY THESE TWO SCHOOL ADMIN ROUTES
 app.use("/api/school-admin", schoolAdminRoutes);
 app.use("/api/school-admin/forgot-password", schoolAdminForgotPasswordRoutes);
+
+// ✅ Health check endpoint for cron-job.org ping (prevents Render cold starts)
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
 
 // Serve static assets only in production
 if (process.env.NODE_ENV === "production") {
@@ -117,7 +115,6 @@ if (process.env.NODE_ENV === "production") {
 app.use(notFound);
 app.use(errorHandler);
 
-// Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
